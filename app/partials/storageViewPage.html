@@ -11,14 +11,14 @@
         <div class="container">
             <div class="row">
                 <div class="col-xs-6" ng-repeat="tdata in tabDataLR">
-                    <div class="panel panel-default">
+                    <div class="panel panel-default" >
                         <!-- Default panel contents -->
                         <div class="panel-heading">Panel heading</div>
 
                         <ul class="list-group" ng-repeat="uldata in tdata">
                             <li class="list-group-item success">
-                                <a type="button" href="#/storeViewPage/{{uldata.number}}"
-                                   ui-sref="navTemplate.storeView({storeno:uldata.number})"
+                                <a type="button" href="#/storeViewPage/{{uldata.pile_no}}"
+                                   ui-sref="navTemplate.storeView({storeno:uldata.pile_no})"
                                    class="btn btn-lg btn-block btn-{{uldata.state}}">
                                     <span class="label label-warning pull-left">
                                         {{uldata.slab_count}}</span>

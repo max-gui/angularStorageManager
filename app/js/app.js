@@ -10,7 +10,8 @@ angular.module('myApp', [
   'myApp.controllers',
   'ui.router',
   'ui.sortable',
-  'ui.tree'
+  'ui.tree',
+  'infinite-scroll'
 ]).
 config(['$stateProvider', '$urlRouterProvider',
         function($stateProvider, $urlRouterProvider) {
