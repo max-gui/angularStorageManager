@@ -20,9 +20,9 @@ angular.module('myApp.controllers', []).directive('popover', function() {
                            //$http.defaults.useXDomain = true;
                            //$http.defaults.headers.ContentType = "text/plain, charset=utf-8";
 
-                           $http.get('http://192.168.58.122/SYC_WCF/SYCService/Login(' +
-                                     $state.params.name + ',' +
-                                     $state.params.password + ')'
+                           $http.get('http://work/SycWeb/Login?userid=' +
+                                     $state.params.name + '&pwd=' +
+                                     $state.params.password
                                     ).
                            success(function(data) {
                              if(data.user_name == undefined){
@@ -146,7 +146,7 @@ angular.module('myApp.controllers', []).directive('popover', function() {
                                   };
                                   */
                                   $scope.getStorageInfo = function(Hallno) {
-                                    $http.get('http://192.168.58.122/SYC_WCF/SYCService/GetPilesByHallno(' + Hallno + ')').success(function(data) {
+                                    $http.get('http://work/SycWeb/GetPilesByHallno/' + Hallno).success(function(data) {
                                       var tabData= data;
                                       tabData.sort(mySortRow);
                                       //tabData.sort(mySortCol);
@@ -199,11 +199,13 @@ angular.module('myApp.controllers', []).directive('popover', function() {
                                 //$("[data-toggle=popover]").popover();
                                 $scope.storeno = $state.params.storeno;
                                 $scope.rowNum = [1];
-                                $scope.choosenRow = $scope.rowNum[0];
+                                //$scope.choosenRow = $scope.rowNum[0];
                                 $scope.error = "hh";
                                 $scope.dataToInsert = new Object();
                                 $scope.dataToInsert.SLAB_NO = "";
                                 $scope.dataToInsert.TIER_NO = 1;
+                                $scope.dataToInsert.pile_no = $scope.storeno;
+                                $('#moveAlert').hide();
 
                                 $scope.slabInfo = {
                                   "steel_grade": "板坯钢种",
@@ -225,9 +227,66 @@ angular.module('myApp.controllers', []).directive('popover', function() {
                                   "plant_no": "铸机号"
                                 };
 
+                                $scope.treeOptions = {
+                                  dropped : function(event) {
+                                    var dataTmp = $scope.storeData;
+                                    var sendLength = dataTmp.length;
+                                    var dataToSend = [];
+                                    var indexTmp;
+
+                                    dataTmp.forEach(
+                                      function(elem,index)
+                                      {
+                                        var eleTmp = {};
+
+                                        indexTmp = sendLength - index;
+                                        if(elem.tier_no != indexTmp){
+                                          eleTmp.pile_no = elem.pile_no;
+                                          eleTmp.slab_no  = elem.slab_no;
+                                          eleTmp.tier_no = indexTmp;
+                                          eleTmp.index = index;
+                                          dataToSend.push(eleTmp);
+                                        }
+                                      }
+                                    )
+
+                                    if (dataToSend.length > 0){
+                                      $scope.error = "";
+                                      $http.post('http://work/SycWeb/MoveSlab',
+                                                 dataToSend,
+                                                 {timeout: 300}).
+                                      success(function(data) {
+                                        if(data == "ok"){
+
+                                          dataToSend.forEach(
+                                            function(elem)
+                                            {
+                                              dataTmp[elem.index].tier_no = elem.tier_no;
+                                            }
+                                          )
+                                          $('#moveAlert').hide();
+                                        }
+                                        else
+                                        {
+                                          $('#moveAlert').show();
+                                          $scope.error = data;
+
+                                          $scope.hideOrNot = '';
+                                        }
+                                      }).
+                                      error(function(data, status) {
+                                        //$scope.hideOrNot = '';
+                                        $('#moveAlert').show();
+                                        $scope.error = "网络错误请重新提交，只需提起任意板坯并放在原处即可";
+                                      });
+                                    }
+                                    return true;
+                                  },
+                                };
+
                                 //$http.get('data/store' + $scope.storeno + '.json')
-                                $http.get('http://192.168.58.122/SYC_WCF/SYCService/GetSlabByPileNo(' +
-                                          $scope.storeno + ')').success(function(data) {
+                                $http.get('http://work/SycWeb/GetSlabByPileNo/' +
+                                          $scope.storeno).success(function(data) {
                                   data.sort(mySortTIER_NO);
                                   $scope.storeData = data;
 
@@ -243,6 +302,7 @@ angular.module('myApp.controllers', []).directive('popover', function() {
                                 {
                                   $scope.toGetData = [{"slab_id":""}];
                                   $scope.hideOrNot = 'hide';
+                                  $scope.error = '';
                                   $('#addGetAlert').hide();
 
                                 }
@@ -265,12 +325,11 @@ angular.module('myApp.controllers', []).directive('popover', function() {
 
                                   var json = JSON.stringify(dataObj);
 
-                                  $http.post('http://192.168.8.22/webapplication2/api/default1',{
-	"BoolValue":true,
-	"StringValue":"String content"
-},{timeout: 300}).
+                                  $http.post('http://work/SycWeb/RequestSlab',
+                                             getDataToSent,
+                                             {timeout: 300}).
                                   success(function(data) {
-                                    if(data = ""){
+                                    if(data == "ok"){
 
                                       $('#addGetAlert').hide();
                                       $('#addGetModall').modal('hide');
@@ -290,10 +349,10 @@ angular.module('myApp.controllers', []).directive('popover', function() {
                                   });
                                 }
 
-                                $scope.setChoosenRow = function(row)
-                                {
-                                  $scope.choosenRow = row;
-                                }
+                                //$scope.setChoosenRow = function(row)
+                                //{
+                                //  $scope.choosenRow = row;
+                                //}
 
                                 $scope.addToGet = function() {
                                   $scope.toGetData.push({"slab_id":""});
@@ -305,26 +364,66 @@ angular.module('myApp.controllers', []).directive('popover', function() {
                                 };
                                 */
 
-                                $scope.myRemove = function(scope)
+                                $scope.myRemove = function(scope,index)
                                 {
-                                  scope.remove();
-                                  $scope.rowNum.pop();
+                                  $http.get("http://work/SycWeb/RemoveSlab?slabno=" +
+                                            $scope.storeData[index].slab_no + "&pileno=" +
+                                            $scope.storeData[index].pile_no + "&tierno=" +
+                                            $scope.storeData[index].tier_no,$scope.dataToInsert,{timeout: 300}).
+                                  success(function(data) {
+                                    if(data == "ok"){
+
+                                      scope.remove();
+                                      $scope.rowNum.pop();
+                                    }
+                                  }).
+                                  error(function(data, status) {
+                                  });
                                 };
 
                                 $scope.addSlabInit = function()
                                 {
                                   $scope.dataToInsert.SLAB_NO = "";
                                   $scope.dataToInsertTIER_NO = 1;
-                                  $('#addGetAlert').hide();
+                                  $('#addSlabAlert').hide();
+                                  $scope.error = '';
                                 }
 
                                 $scope.addSlab = function() {
-                                  $http.post('http://192.168.58.122/SYC_WCF/SYCService/InsertSlab',$scope.dataToInsert,{timeout: 300}).
+                                  //$scope.dataToInsert.SLAB_NO = "";
+                                  //$scope.dataToInsert.TIER_NO = "";
+                                  var addOrNot = true;
+                                  $scope.storeData.forEach(
+                                    function(elem)
+                                    {
+                                      if(elem.slab_no == $scope.dataToInsert.SLAB_NO)
+                                      {
+                                        $('#addSlabAlert').show();
+                                        $scope.error = "这块板坯已经在本堆垛中";
+
+                                        $scope.hideOrNot = '';
+                                        addOrNot = false;
+                                        return;
+                                      }
+                                    }
+                                  )
+
+                                  if(!addOrNot)
+                                  {
+                                    return
+                                  }
+
+                                  $http.post('http://work/SycWeb/InsertSlab',$scope.dataToInsert,{timeout: 300}).
                                   success(function(data) {
-                                    if(data = ""){
+                                    if(data.slab_no != ""){
 
                                       $('#addSlabAlert').hide();
                                       $('#addSlabModall').modal('hide');
+
+                                      $scope.storeData.splice($scope.storeData.length + 1 - $scope.dataToInsert.TIER_NO,
+                                                              0,
+                                                              data).sort(mySortTIER_NO);
+                                      $scope.rowNum.push($scope.storeData.length + 1);
                                     }
                                     else
                                     {
@@ -339,30 +438,6 @@ angular.module('myApp.controllers', []).directive('popover', function() {
                                     $('#addSlabAlert').show();
                                     $scope.error = "网络错误";
                                   });
-
-                                  $scope.storeData.splice($scope.storeData.length + 1 - TIER_NO,0,
-                                                          {
-                                                            "SLAB_NO": "SLAB_NO",
-                                                            "STEEL_GRADE": "Q345GJC-Z15",
-                                                            "SLAB_THICK": 300,
-                                                            "SLAB_WIDTH": 1810,
-                                                            "SLAB_LENGTH": 2840,
-                                                            "SLAB_WEIGHT": 11982,
-                                                            "PILE_NO": "H1022",
-                                                            "TIER_NO": 10,
-                                                            "COIL_NO": "",
-                                                            "ST_NO": "",
-                                                            "SLAB_STATUS": "000",
-                                                            "SLAB_ATTRIBUTE": "00000000",
-                                                            "HCR_FLAG": 0,
-                                                            "HEAT_NO": "",
-                                                            "YC_FLAG": 0,
-                                                            "ORDER_NO": "",
-                                                            "ACT_WEIGHT": 0,
-                                                            "YARD_NO": "",
-                                                            "PLANT_NO": 1
-                                                          }).sort(mySortTIER_NO);
-                                  $scope.rowNum.push($scope.storeData.length + 1);
                                 };
 
                                   function mySortTIER_NO(a,b){

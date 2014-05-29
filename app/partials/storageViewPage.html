@@ -1,6 +1,6 @@
 <ul class="nav nav-tabs">
     <li ng-repeat="num in storageNum">
-        <a href="/#pile{{num}}" data-toggle="tab" ng-click="getStorageInfo(num)">第{{num}}跨</a>
+        <a href="/#pile{{num}}" ui-sref="navTemplate.storageView" data-toggle="tab" ng-click="getStorageInfo(num)">第{{num}}跨</a>
     </li>
 </ul>
 

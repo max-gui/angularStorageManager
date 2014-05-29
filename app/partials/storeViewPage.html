@@ -1,5 +1,9 @@
 <div class="row" style="padding-top: 45px">
     <div class="col-sm-6">
+        <div id="moveAlert" class="alert alert-danger alert-dismissable fade in">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>出错!</strong>{{error}}
+        </div>
         <div class="panel panel-default">
             <!-- Default panel contents -->
             <div class="panel-heading">
@@ -19,10 +23,10 @@
                 </div>
             </div>
 
-            <div ui-tree>
+            <div ui-tree="treeOptions">
                 <ol ui-tree-nodes ng-model="storeData">
                     <li class="list-group-item" ng-repeat="liData in storeData" ui-tree-node>
-                        <button type="button" class="btn btn-default" ng-click="myRemove(this)">
+                        <button type="button" class="btn btn-default" ng-click="myRemove(this,$index)">
                             <span class="glyphicon glyphicon glyphicon-minus-sign"></span>
                         </button>
                         <a popover class="btn btn-{{uldata.state}}"
@@ -158,7 +162,7 @@
                         <label for="inputRow" class="col-sm-3 control-label">板坯所在的层</label>
                         <div class="col-sm-5">
                             <select class="form-control" id="inputRow"
-                                    ng-model="dataToInsert.choosenRow" ng-options="row for row in rowNum">
+                                    ng-model="dataToInsert.TIER_NO" ng-options="row for row in rowNum">
                             </select>
                         </div>
                     </div>
