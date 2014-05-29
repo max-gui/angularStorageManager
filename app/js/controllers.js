@@ -2,14 +2,6 @@
 
 /* Controllers */
 
-<<<<<<< HEAD
-angular.module('myApp.controllers', [])
-  .controller('MyCtrl1', ['$scope', function($scope) {
-
-  }])
-  .controller('MyCtrl2', ['$scope', function($scope) {
-=======
-
 angular.module('myApp.controllers', []).directive('popover', function() {
   return function(scope, elem) {
     elem.popover();
@@ -17,7 +9,6 @@ angular.module('myApp.controllers', []).directive('popover', function() {
 })
 .controller('loginCtrl', ['$scope','$http',
                           function($scope, $http) {
->>>>>>> service
 
                           }])
 .controller('funcCtrl', ['$scope', '$rootScope', '$state', '$http',
