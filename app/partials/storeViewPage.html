@@ -1,0 +1,181 @@
+<div class="row" style="padding-top: 45px">
+    <div class="col-sm-6">
+        <div id="moveAlert" class="alert alert-danger alert-dismissable fade in">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <strong>出错!</strong>{{error}}
+        </div>
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-4">
+                        <button class="btn btn-primary pull-left" ng-click="addGetInit()" data-toggle="modal"
+                                data-target="#addGetModall">
+                            <span class="glyphicon glyphicon-cloud-download"></span>
+                        </button>
+                    </div>
+                    <div class="col-xs-4">{{storeno}}</div>
+                    <div class="col-xs-4">
+                        <button class="btn btn-primary pull-right" ng-click="addSlabInit()" data-toggle="modal"
+                                data-target="#addSlabModall">
+                            <span class="glyphicon glyphicon-plus-sign"></span>
+                        </button></div>
+                </div>
+            </div>
+
+            <div ui-tree="treeOptions">
+                <ol ui-tree-nodes ng-model="storeData">
+                    <li class="list-group-item" ng-repeat="liData in storeData" ui-tree-node>
+                        <button type="button" class="btn btn-default" ng-click="myRemove(this,$index)">
+                            <span class="glyphicon glyphicon glyphicon-minus-sign"></span>
+                        </button>
+                        <a popover class="btn btn-{{uldata.state}}"
+                           data-toggle="popover"
+                           data-html="true"
+                           data-placement = "right"
+                           data-content="
+                           <div class='table-responsive'>
+                           <table class='table table-condensed'>
+                            <tbody>
+                                <tr>
+                                    <td>板坯钢种</td>
+                                    <td>{{liData.steel_grade}}</td>
+                                    <td>板坯厚度</td>
+                                    <td>{{liData.slab_thick}}</td>
+                                </tr>
+                                <tr>
+                                    <td>板坯宽度</td>
+                                    <td>{{liData.slab_width}}</td>
+                                    <td>板坯长度</td>
+                                    <td>{{liData.slab_length}}</td>
+                                </tr>
+                                <tr>
+                                    <td>板坯理重</td>
+                                    <td>{{liData.slab_weight}}</td>
+                                    <td>铸机号</td>
+                                    <td>{{liData.plant_no}}</td>
+                                </tr>
+                                <tr>
+                                    <td>钢卷号</td>
+                                    <td>{{liData.coil_no}}</td>
+                                    <td>出钢记号</td>
+                                    <td>{{liData.st_no}}</td>
+                                </tr>
+                                <tr>
+                                    <td>板坯状态</td>
+                                    <td>{{liData.slab_status}}</td>
+                                    <td>板坯属性</td>
+                                    <td>{{liData.slab_attribute}}</td>
+                                </tr>
+                                <tr>
+                                    <td>hcr标志</td>
+                                    <td>{{liData.hcr_flag}}</td>
+                                    <td>炉次号</td>
+                                    <td>{{liData.heat_no}}</td>
+                                </tr>
+                                <tr>
+                                    <td>余材坯</td>
+                                    <td>{{liData.yc_flag}}</td>
+                                    <td>生产订单号</td>
+                                    <td>{{liData.order_no}}</td>
+                                </tr>
+                                <tr>
+                                    <td>实际重量</td>
+                                    <td>{{liData.act_weight}}</td>
+                                    <td>合格标志</td>
+                                    <td>{{liData.yard_no}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>"
+                >
+                {{liData.slab_no}}
+            </a>
+            <div class="pull-right tree-handle ng-scope angular-ui-tree-handle btn-lg" ui-tree-handle>
+                <span class="glyphicon glyphicon-list"></span>
+            </div>
+            <span class="badge">{{storeData.length - $index}}</span>
+
+        </li>
+    </ol>
+</div>
+</div>
+</div>
+
+<div class="col-sm-6">
+    <h3>Full tree</h3>
+    <pre class="code">{{rowNum}},{{storeData.length}},{{ storeData | json }}</pre>
+</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addGetModall" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group"  ng-repeat="getData in toGetData">
+                        <label for="inputSLAB_NO" class="col-sm-3 control-label">板坯号</label>
+                        <div class="col-sm-5">
+                            <input type="text" ng-model="getData.slab_id" class="form-control" id="inputSLAB_NO" placeholder="板坯号">
+                        </div>
+                    </div>
+                    <div id="addGetAlert" class="alert alert-danger alert-dismissable fade in">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <strong>出错!</strong>{{error}}
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" ng-click="addToGet()">
+                    add
+                </button>
+                <button type="button" class="btn btn-primary" ng-click="toGet()">Save changes</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addSlabModall" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <label for="inputSLAB_NO" class="col-sm-3 control-label">板坯号</label>
+                        <div class="col-sm-5">
+                            <input type="text" ng-model="dataToInsert.SLAB_NO" class="form-control" id="inputSLAB_NO" placeholder="板坯号">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputRow" class="col-sm-3 control-label">板坯所在的层</label>
+                        <div class="col-sm-5">
+                            <select class="form-control" id="inputRow"
+                                    ng-model="dataToInsert.TIER_NO" ng-options="row for row in rowNum">
+                            </select>
+                        </div>
+                    </div>
+                    <div id="addSlabAlert" class="alert alert-danger alert-dismissable fade in">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <strong>出错!</strong>{{error}}
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" ng-click="addSlab()">Save changes</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>

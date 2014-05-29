@@ -1,0 +1,62 @@
+<ul class="nav nav-tabs">
+    <li ng-repeat="num in storageNum">
+        <a href="/#pile{{num}}" ui-sref="navTemplate.storageView" data-toggle="tab" ng-click="getStorageInfo(num)">第{{num}}跨</a>
+    </li>
+</ul>
+
+<div class="tab-content" >
+    <div ng-repeat="num in storageNum" class="tab-pane" id="pile{{num}}">
+
+
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-6" ng-repeat="tdata in tabDataLR">
+                    <div class="panel panel-default" >
+                        <!-- Default panel contents -->
+                        <div class="panel-heading">Panel heading</div>
+
+                        <ul class="list-group" ng-repeat="uldata in tdata">
+                            <li class="list-group-item success">
+                                <a type="button" href="#/storeViewPage/{{uldata.pile_no}}"
+                                   ui-sref="navTemplate.storeView({storeno:uldata.pile_no})"
+                                   class="btn btn-lg btn-block btn-{{uldata.state}}">
+                                    <span class="label label-warning pull-left">
+                                        {{uldata.slab_count}}</span>
+                                    {{uldata.pile_no}}
+
+                                    <span class="badge pull-right">{{uldata.row_no}}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--<table class="table table-striped">
+<thead>
+<tr>
+<th>第一列堆垛信息</th>
+<th>第二列堆垛信息</th>
+</tr>
+</thead>
+<tbody ng-repeat="tdata in tabDataLR">
+<tr>
+<td>
+<button type="button" class="btn btn-{{tdata.left.state}}">
+<span class="badge">{{tdata.left.number}}
+</span>
+{{tdata.left.num}}
+<span class="badge">{{tdata.left.row}}</span>
+</button>
+</td>
+<td>
+<a type="button" href="#/storeViewPage/:pileno" class="btn btn-{{tdata.right.state}}">
+<span class="badge">{{tdata.right.number}}</span>
+{{tdata.right.num}}
+<span class="badge">{{tdata.right.row}}</span></a>
+</td>
+</tr>
+</tbody>
+</table>/-->
+    </div>
+</div>
