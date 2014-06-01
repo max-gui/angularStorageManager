@@ -16,17 +16,48 @@ angular.module('myApp.controllers', []).directive('popover', function() {
                            $rootScope.name = $state.params.name;
                            $rootScope.password = $state.params.password;
 
+                           /*
+                           var enPsd = [];
+                           for (var i = 0; i < $rootScope.password.length; i++) {
+                             enPsd.push($rootScope.password.charCodeAt(i));
+                           }
+
+                           var enTime = [];
+                           */
+
+                           //new Date().getTime().toString().charCodeAt(0)
+
                            //$http.defaults.useXDomain = true;
                            //$http.defaults.headers.ContentType = "text/plain, charset=utf-8";
+                           var encrypt = new JSEncrypt();
+                           encrypt.setPublicKey(
+                             "-----BEGIN PUBLIC KEY-----" +
+                             "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC51FzMSexieGcfr2NJFT5QKcEz" +
+                             "gzpH5PIbe4NwZOc0pMD1Ez9vI69rUPes4jVdbYIragj7bk3xKMhwZ9m5bVm7Lnov" +
+                             "sBqjDO2Cm6vQyAw6jvHf3QjiM9j7io9JjVE/pNgZaECZhpN7XT8BPvM2C7w2Lftj" +
+                             "S6zKOEjpdLQADVW2BwIDAQAB" +
+                             "-----END PUBLIC KEY-----"
+                           );
+                           console.log(encrypt);
 
+                           /*
                            $http.get('http://work/SycWeb/Login?userid=' +
                                      $state.params.name + '&pwd=' +
-                                     $state.params.password
+                                     encrypted
                                     ).
+                           */
+                           var encrypted = encrypt.encrypt($state.params.password);
+
+                           $http.post('http://work/SycWeb/Login?userid=' + $state.params.name,
+                                                 JSON.stringify(encrypted),
+                                                 {timeout: 300}).
                            success(function(data) {
-                             if(data.user_name == undefined){
+                             if(data.Status == false){
                                $state.go("login");
                              }
+                           }).
+                           error(function(data,status){
+                             $state.go("login");
                            });
 
                          }])
@@ -146,7 +177,7 @@ angular.module('myApp.controllers', []).directive('popover', function() {
                                   */
                                   $scope.getStorageInfo = function(Hallno) {
                                     $http.get('http://work/SycWeb/GetPilesByHallno/' + Hallno).success(function(data) {
-                                      var tabData= data;
+                                      var tabData= data.Data;
                                       tabData.sort(mySortRow);
                                       //tabData.sort(mySortCol);
                                       var tabColLeft = [],tabColRight = [];
@@ -213,7 +244,7 @@ angular.module('myApp.controllers', []).directive('popover', function() {
                                   "slab_length": "板坯长度",
                                   "slab_weight": "板坯理重",
                                   "tier_no": "板坯层号",
-                                  "coil_no": "钢卷号",
+                                  "roll_prg_no": "轧制计划",
                                   "st_no": "出钢记号",
                                   "slab_status": "板坯状态",
                                   "slab_attribute": "板坯属性",
@@ -255,7 +286,7 @@ angular.module('myApp.controllers', []).directive('popover', function() {
                                                  dataToSend,
                                                  {timeout: 300}).
                                       success(function(data) {
-                                        if(data == "ok"){
+                                        if(data.Status == true){
 
                                           dataToSend.forEach(
                                             function(elem)
@@ -268,7 +299,7 @@ angular.module('myApp.controllers', []).directive('popover', function() {
                                         else
                                         {
                                           $('#moveAlert').show();
-                                          $scope.error = data;
+                                          $scope.error = data.Message;
 
                                           $scope.hideOrNot = '';
                                         }
@@ -286,10 +317,10 @@ angular.module('myApp.controllers', []).directive('popover', function() {
                                 //$http.get('data/store' + $scope.storeno + '.json')
                                 $http.get('http://work/SycWeb/GetSlabByPileNo/' +
                                           $scope.storeno).success(function(data) {
-                                  data.sort(mySortTIER_NO);
-                                  $scope.storeData = data;
+                                  data.Data.sort(mySortTIER_NO);
+                                  $scope.storeData = data.Data;
 
-                                  data.forEach(
+                                  data.Data.forEach(
                                     function(elem,index)
                                     {
                                       $scope.rowNum.push(index + 2);
@@ -328,7 +359,7 @@ angular.module('myApp.controllers', []).directive('popover', function() {
                                              getDataToSent,
                                              {timeout: 300}).
                                   success(function(data) {
-                                    if(data == "ok"){
+                                    if(data.Status == true){
 
                                       $('#addGetAlert').hide();
                                       $('#addGetModall').modal('hide');
@@ -336,7 +367,7 @@ angular.module('myApp.controllers', []).directive('popover', function() {
                                     else
                                     {
                                       $('#addGetAlert').show();
-                                      $scope.error = data;
+                                      $scope.error = data.Message;
 
                                       $scope.hideOrNot = '';
                                     }
@@ -370,7 +401,7 @@ angular.module('myApp.controllers', []).directive('popover', function() {
                                             $scope.storeData[index].pile_no + "&tierno=" +
                                             $scope.storeData[index].tier_no,$scope.dataToInsert,{timeout: 300}).
                                   success(function(data) {
-                                    if(data == "ok"){
+                                    if(data.Status == true){
 
                                       scope.remove();
                                       $scope.rowNum.pop();
@@ -414,20 +445,20 @@ angular.module('myApp.controllers', []).directive('popover', function() {
 
                                   $http.post('http://work/SycWeb/InsertSlab',$scope.dataToInsert,{timeout: 300}).
                                   success(function(data) {
-                                    if(data.slab_no != ""){
+                                    if(data.Status == true){
 
                                       $('#addSlabAlert').hide();
                                       $('#addSlabModall').modal('hide');
 
                                       $scope.storeData.splice($scope.storeData.length + 1 - $scope.dataToInsert.TIER_NO,
                                                               0,
-                                                              data).sort(mySortTIER_NO);
+                                                              data.Data).sort(mySortTIER_NO);
                                       $scope.rowNum.push($scope.storeData.length + 1);
                                     }
                                     else
                                     {
                                       $('#addSlabAlert').show();
-                                      $scope.error = data;
+                                      $scope.error = data.Message;
 
                                       $scope.hideOrNot = '';
                                     }
@@ -442,10 +473,4 @@ angular.module('myApp.controllers', []).directive('popover', function() {
                                   function mySortTIER_NO(a,b){
                                     return b.tier_no  - a.tier_no ;
                                   }
-                                }])
-                                .controller('MyCtrl1', [function() {
-
-                                }])
-                                .controller('MyCtrl2', [function() {
-
                                 }]);
