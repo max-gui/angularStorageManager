@@ -50,7 +50,7 @@ angular.module('myApp.controllers', []).directive('popover', function() {
 
                            $http.post('http://work/SycWeb/Login?userid=' + $state.params.name,
                                                  JSON.stringify(encrypted),
-                                                 {timeout: 300}).
+                                                 {timeout: 1500}).
                            success(function(data) {
                              if(data.Status == false){
                                $state.go("login");
@@ -64,6 +64,7 @@ angular.module('myApp.controllers', []).directive('popover', function() {
 .controller('storageViewCtrl', ['$scope', '$stateParams','$http',
                                 function($scope, $stateParams, $http) {
                                   $scope.storageNum = [1,2,3,4];
+                                  //$scope.scrollFlag = false;
                                   /*
                                   $scope.tabData =
                                     [
@@ -169,9 +170,17 @@ angular.module('myApp.controllers', []).directive('popover', function() {
                                     return a.col_no - b.col_no;
                                   }
                                   /*
-                                  $scope.loadMore = function() {
-                                    $scope.tabDataLR[0] = $scope.tabDataLR[0].concat($scope.tmpLR[0].splice(0,8));
-                                    $scope.tabDataLR[1] = $scope.tabDataLR[1].concat($scope.tmpLR[1].splice(0,8));
+                                  $scope.loadMore = function(index) {
+                                    if($scope.tmpLR[index].length > 0)
+                                    {
+                                      $scope.tabDataLR[index] =
+                                        $scope.tabDataLR[index].concat($scope.tmpLR[index].splice(0,8));
+                                    }
+
+                                    if($scope.tmpLR[index].length == 0)
+                                    {
+                                      $scope.scrollFlag = true;
+                                    }
 
                                   };
                                   */
@@ -210,15 +219,15 @@ angular.module('myApp.controllers', []).directive('popover', function() {
                                       );
 
                                       //$scope.tabDataLR = tabDataLR;
-                                      $scope.tabDataLR = [];
-                                      $scope.tabDataLR.push(tabColLeft);
-                                      $scope.tabDataLR.push(tabColRight);
-                                      //$scope.tmpLR = [];
-                                      //$scope.tmpLR.push(tabColLeft);
-                                      //$scope.tmpLR.push(tabColRight);
                                       //$scope.tabDataLR = [];
-                                      //$scope.tabDataLR.push($scope.tmpLR[0].splice(0,8));
-                                      //$scope.tabDataLR.push($scope.tmpLR[1].splice(0,8));
+                                      //$scope.tabDataLR.push(tabColLeft);
+                                      //$scope.tabDataLR.push(tabColRight);
+                                      $scope.tmpLR = [];
+                                      $scope.tmpLR.push(tabColLeft);
+                                      $scope.tmpLR.push(tabColRight);
+                                      $scope.tabDataLR = [];
+                                      $scope.tabDataLR.push($scope.tmpLR[0].splice(0,8));
+                                      $scope.tabDataLR.push($scope.tmpLR[1].splice(0,8));
                                     });
                                   }
 
@@ -284,7 +293,7 @@ angular.module('myApp.controllers', []).directive('popover', function() {
                                       $scope.error = "";
                                       $http.post('http://work/SycWeb/MoveSlab',
                                                  dataToSend,
-                                                 {timeout: 300}).
+                                                 {timeout: 1500}).
                                       success(function(data) {
                                         if(data.Status == true){
 
@@ -357,7 +366,7 @@ angular.module('myApp.controllers', []).directive('popover', function() {
 
                                   $http.post('http://work/SycWeb/RequestSlab',
                                              getDataToSent,
-                                             {timeout: 300}).
+                                             {timeout: 1500}).
                                   success(function(data) {
                                     if(data.Status == true){
 
@@ -399,7 +408,7 @@ angular.module('myApp.controllers', []).directive('popover', function() {
                                   $http.get("http://work/SycWeb/RemoveSlab?slabno=" +
                                             $scope.storeData[index].slab_no + "&pileno=" +
                                             $scope.storeData[index].pile_no + "&tierno=" +
-                                            $scope.storeData[index].tier_no,$scope.dataToInsert,{timeout: 300}).
+                                            $scope.storeData[index].tier_no,$scope.dataToInsert,{timeout: 1500}).
                                   success(function(data) {
                                     if(data.Status == true){
 
@@ -443,7 +452,7 @@ angular.module('myApp.controllers', []).directive('popover', function() {
                                     return
                                   }
 
-                                  $http.post('http://work/SycWeb/InsertSlab',$scope.dataToInsert,{timeout: 300}).
+                                  $http.post('http://work/SycWeb/InsertSlab',$scope.dataToInsert,{timeout: 1500}).
                                   success(function(data) {
                                     if(data.Status == true){
 
