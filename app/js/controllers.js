@@ -7,28 +7,20 @@ angular.module('myApp.controllers', []).directive('popover', function() {
     elem.popover();
   }
 })
-.controller('loginCtrl', ['$scope','$http',
-                          function($scope, $http) {
+.controller('loginCtrl', ['$scope','data',
+                          function($scope, data) {
+                            $scope.name = '';
+                            $scope.password = '';
+                            $scope.setPassword = function(){
+                              data.password = $scope.password;
+                              data.name = $scope.name;
+                            }
 
                           }])
-.controller('funcCtrl', ['$scope', '$rootScope', '$state', '$http',
-                         function($scope, $rootScope, $state, $http) {
-                           $rootScope.name = $state.params.name;
-                           $rootScope.password = $state.params.password;
-
-                           /*
-                           var enPsd = [];
-                           for (var i = 0; i < $rootScope.password.length; i++) {
-                             enPsd.push($rootScope.password.charCodeAt(i));
-                           }
-
-                           var enTime = [];
-                           */
-
-                           //new Date().getTime().toString().charCodeAt(0)
-
-                           //$http.defaults.useXDomain = true;
-                           //$http.defaults.headers.ContentType = "text/plain, charset=utf-8";
+.controller('funcCtrl', ['$scope', '$state', '$http','data',
+                         function($scope, $state, $http, data) {
+                           $scope.name = data.name;
+                           //$rootScope.password = data.password;
                            var encrypt = new JSEncrypt();
                            encrypt.setPublicKey(
                              "-----BEGIN PUBLIC KEY-----" +
@@ -40,15 +32,9 @@ angular.module('myApp.controllers', []).directive('popover', function() {
                            );
                            console.log(encrypt);
 
-                           /*
-                           $http.get('http://work/SycWeb/Login?userid=' +
-                                     $state.params.name + '&pwd=' +
-                                     encrypted
-                                    ).
-                           */
-                           var encrypted = encrypt.encrypt($state.params.password);
+                           var encrypted = encrypt.encrypt(data.password);
 
-                           $http.post('http://work/SycWeb/Login?userid=' + $state.params.name,
+                           $http.post('http://work/SycWeb/Login?userid=' + data.name,
                                                  JSON.stringify(encrypted),
                                                  {timeout: 1500}).
                            success(function(data) {
@@ -57,7 +43,7 @@ angular.module('myApp.controllers', []).directive('popover', function() {
                              }
                            }).
                            error(function(data,status){
-                             $state.go("login");
+                             //$state.go("login");
                            });
 
                          }])
@@ -65,103 +51,6 @@ angular.module('myApp.controllers', []).directive('popover', function() {
                                 function($scope, $stateParams, $http) {
                                   $scope.storageNum = [1,2,3,4];
                                   //$scope.scrollFlag = false;
-                                  /*
-                                  $scope.tabData =
-                                    [
-                                    {
-                                      "row": 1,
-                                      "col": 1,
-                                      "number": "1",
-                                      "num": 10,
-                                      "state": 1
-                                    }
-                                  ];
-
-                                  var tabData =
-                                      [
-                                        {
-                                          "row": 1,
-                                          "col": 2,
-                                          "number": "1",
-                                          "num": 10,
-                                          "state": 0
-                                        },
-                                        {
-                                          "row": 2,
-                                          "col": 1,
-                                          "number": "1",
-                                          "num": 10,
-                                          "state": 1
-                                        },
-                                        {
-                                          "row": 2,
-                                          "col": 2,
-                                          "number": "1",
-                                          "num": 10,
-                                          "state": 0
-                                        },
-                                        {
-                                          "row": 3,
-                                          "col": 2,
-                                          "number": "1",
-                                          "num": 10,
-                                          "state": 0
-                                        },
-                                        {
-                                          "row": 1,
-                                          "col": 1,
-                                          "number": "1",
-                                          "num": 10,
-                                          "state": 1
-                                        }
-
-                                      ];
-
-                                  tabData.sort(mySortRow);
-                                  tabData.sort(mySortCol);
-                                  tabData;
-                                  var tabColLeft = [],tabColRight = [];
-                                  var tabDataLR = [];
-                                  tabData.forEach(
-                                    function(data){
-                                      var tmp = new Object();
-
-                                      if(data.state == 0)
-                                      {
-                                        data.state = "success";
-                                      }
-                                      else
-                                      {
-                                        data.state = "danger";
-                                      }
-
-                                      if(data.col == 1)
-                                      {
-                                        tmp.left = data;
-                                        tabColLeft.push(data);
-                                      }
-                                      else
-                                      {
-                                        tmp.right = data;
-                                        tabColRight.push(data);
-                                      }
-                                      tabDataLR.push(tmp);
-                                    }
-                                  );
-                                  tabColLeft;
-                                  tabColRight;
-                                  tabDataLR;
-                                  //$scope.tabDataLR = tabDataLR;
-                                  $scope.tabDataLR = [];
-                                  $scope.tabDataLR.push(tabColLeft);
-                                  $scope.tabDataLR.push(tabColRight);
-
-                                  $scope.getStorageInfo = function(pileno) {
-                                    $http.get('data/pilo' + pileno + '.json').success(function(data) {
-                                      $scope.tabData = data;
-                                    });
-                                  }
-*/
                                   function mySortRow(a,b){
                                     return a.row_no - b.row_no;
                                   }
@@ -169,28 +58,13 @@ angular.module('myApp.controllers', []).directive('popover', function() {
                                   function mySortCol(a,b){
                                     return a.col_no - b.col_no;
                                   }
-                                  /*
-                                  $scope.loadMore = function(index) {
-                                    if($scope.tmpLR[index].length > 0)
-                                    {
-                                      $scope.tabDataLR[index] =
-                                        $scope.tabDataLR[index].concat($scope.tmpLR[index].splice(0,8));
-                                    }
 
-                                    if($scope.tmpLR[index].length == 0)
-                                    {
-                                      $scope.scrollFlag = true;
-                                    }
-
-                                  };
-                                  */
                                   $scope.getStorageInfo = function(Hallno) {
                                     $http.get('http://work/SycWeb/GetPilesByHallno/' + Hallno).success(function(data) {
                                       var tabData= data.Data;
                                       tabData.sort(mySortRow);
-                                      //tabData.sort(mySortCol);
+
                                       var tabColLeft = [],tabColRight = [];
-                                      var tabDataLR = [];
                                       tabData.forEach(
                                         function(data){
                                           var tmp = new Object();
@@ -214,20 +88,12 @@ angular.module('myApp.controllers', []).directive('popover', function() {
                                             tmp.right = data;
                                             tabColRight.push(data);
                                           }
-                                          //tabDataLR.push(tmp);
                                         }
                                       );
 
-                                      //$scope.tabDataLR = tabDataLR;
-                                      //$scope.tabDataLR = [];
-                                      //$scope.tabDataLR.push(tabColLeft);
-                                      //$scope.tabDataLR.push(tabColRight);
-                                      $scope.tmpLR = [];
-                                      $scope.tmpLR.push(tabColLeft);
-                                      $scope.tmpLR.push(tabColRight);
                                       $scope.tabDataLR = [];
-                                      $scope.tabDataLR.push($scope.tmpLR[0].splice(0,8));
-                                      $scope.tabDataLR.push($scope.tmpLR[1].splice(0,8));
+                                      $scope.tabDataLR.push(tabColLeft);
+                                      $scope.tabDataLR.push(tabColRight);
                                     });
                                   }
 
@@ -235,10 +101,8 @@ angular.module('myApp.controllers', []).directive('popover', function() {
 .controller('storeViewCtrl', ['$scope', '$stateParams', '$state', '$http',
                               function($scope, $stateParams, $state, $http) {
 
-                                //$("[data-toggle=popover]").popover();
                                 $scope.storeno = $state.params.storeno;
                                 $scope.rowNum = [1];
-                                //$scope.choosenRow = $scope.rowNum[0];
                                 $scope.error = "hh";
                                 $scope.dataToInsert = new Object();
                                 $scope.dataToInsert.SLAB_NO = "";
@@ -323,7 +187,6 @@ angular.module('myApp.controllers', []).directive('popover', function() {
                                   },
                                 };
 
-                                //$http.get('data/store' + $scope.storeno + '.json')
                                 $http.get('http://work/SycWeb/GetSlabByPileNo/' +
                                           $scope.storeno).success(function(data) {
                                   data.Data.sort(mySortTIER_NO);
@@ -388,20 +251,9 @@ angular.module('myApp.controllers', []).directive('popover', function() {
                                   });
                                 }
 
-                                //$scope.setChoosenRow = function(row)
-                                //{
-                                //  $scope.choosenRow = row;
-                                //}
-
                                 $scope.addToGet = function() {
                                   $scope.toGetData.push({"slab_id":""});
                                 };
-
-                                /*
-                                $scope.remove = function(scope) {
-                                  scope.remove();
-                                };
-                                */
 
                                 $scope.myRemove = function(scope,index)
                                 {

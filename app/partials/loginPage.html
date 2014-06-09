@@ -17,7 +17,7 @@
             <div class="form-group">
               <input ng-model="password" type="password" placeholder="密码" class="form-control">
             </div>
-              <a href="#/funcPage/{{name}}/{{password}}" ui-sref="navTemplate.func({name:name,password:password})">登录</a>
+              <a href="#/funcPage"  ng-click="setPassword()"  ui-sref="navTemplate.func()">登录</a>
             <!--<button type="submit" class="btn btn-success">Sign in</button>-->
           </form>
         </div><!--/.navbar-collapse -->

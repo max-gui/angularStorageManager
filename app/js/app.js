@@ -11,7 +11,8 @@ angular.module('myApp', [
   'ui.router',
   'ui.sortable',
   'ui.tree',
-  'infinite-scroll'
+  'infinite-scroll',
+  'dataServices'
 ]).
 config(['$stateProvider', '$urlRouterProvider',
         function($stateProvider, $urlRouterProvider) {
@@ -38,7 +39,7 @@ config(['$stateProvider', '$urlRouterProvider',
             controller: ''//'funcCtrl'
           }).
           state('navTemplate.func', {
-            url: "/funcPage/:name/:password",
+            url: "/funcPage",
             templateUrl: "partials/funcPage.html",
             controller: 'funcCtrl'
           }).
