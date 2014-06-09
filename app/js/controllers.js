@@ -43,7 +43,7 @@ angular.module('myApp.controllers', []).directive('popover', function() {
                              }
                            }).
                            error(function(data,status){
-                             //$state.go("login");
+                             $state.go("login");
                            });
 
                          }])
