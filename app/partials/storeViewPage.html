@@ -1,4 +1,5 @@
 <div class="row" style="padding-top: 45px">
+    <div class="col-sm-3"/>
     <div class="col-sm-6">
         <div id="moveAlert" class="alert alert-danger alert-dismissable fade in">
             <button type="button" class="close" aria-hidden="true">&times;</button>
@@ -29,83 +30,87 @@
                         <button type="button" class="btn btn-default" ng-click="myRemove(this,$index)">
                             <span class="glyphicon glyphicon glyphicon-minus-sign"></span>
                         </button>
-                        <a popover class="btn btn-{{uldata.state}}"
+                        <button popover class="btn btn-default"
                            data-toggle="popover"
                            data-html="true"
                            data-placement = "right"
+                           data-trigger = "focus"
                            data-content="
-                           <div class='table-responsive'>
-                           <table class='table table-condensed'>
-                            <tbody>
-                                <tr>
-                                    <td>板坯钢种</td>
-                                    <td>{{liData.steel_grade}}</td>
-                                    <td>板坯厚度</td>
-                                    <td>{{liData.slab_thick}}</td>
-                                </tr>
-                                <tr>
-                                    <td>板坯宽度</td>
-                                    <td>{{liData.slab_width}}</td>
-                                    <td>板坯长度</td>
-                                    <td>{{liData.slab_length}}</td>
-                                </tr>
-                                <tr>
-                                    <td>板坯理重</td>
-                                    <td>{{liData.slab_weight}}</td>
-                                    <td>铸机号</td>
-                                    <td>{{liData.plant_no}}</td>
-                                </tr>
-                                <tr>
-                                    <td>轧制计划</td>
-                                    <td>{{liData.roll_prg_no}}</td>
-                                    <td>出钢记号</td>
-                                    <td>{{liData.st_no}}</td>
-                                </tr>
-                                <tr>
-                                    <td>板坯状态</td>
-                                    <td>{{liData.slab_status}}</td>
-                                    <td>板坯属性</td>
-                                    <td>{{liData.slab_attribute}}</td>
-                                </tr>
-                                <tr>
-                                    <td>hcr标志</td>
-                                    <td>{{liData.hcr_flag}}</td>
-                                    <td>炉次号</td>
-                                    <td>{{liData.heat_no}}</td>
-                                </tr>
-                                <tr>
-                                    <td>余材坯</td>
-                                    <td>{{liData.yc_flag}}</td>
-                                    <td>生产订单号</td>
-                                    <td>{{liData.order_no}}</td>
-                                </tr>
-                                <tr>
-                                    <td>实际重量</td>
-                                    <td>{{liData.act_weight}}</td>
-                                    <td>合格标志</td>
-                                    <td>{{liData.yard_no}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>"
-                >
-                {{liData.slab_no}}
-            </a>
-            <div class="pull-right tree-handle ng-scope angular-ui-tree-handle btn-lg" ui-tree-handle>
-                <span class="glyphicon glyphicon-list"></span>
+                                         <div class='table-responsive'>
+                                         <table class='table table-condensed'>
+                                         <tbody>
+                                         <tr>
+                                         <td>板坯钢种</td>
+                                         <td>{{liData.steel_grade}}</td>
+                                         <td>板坯厚度</td>
+                                         <td>{{liData.slab_thick}}</td>
+                                         </tr>
+                                         <tr>
+                                         <td>板坯宽度</td>
+                                         <td>{{liData.slab_width}}</td>
+                                         <td>板坯长度</td>
+                                         <td>{{liData.slab_length}}</td>
+                                         </tr>
+                                         <tr>
+                                         <td>板坯理重</td>
+                                         <td>{{liData.slab_weight}}</td>
+                                         <td>铸机号</td>
+                                         <td>{{liData.plant_no}}</td>
+                                         </tr>
+                                         <tr>
+                                         <td>轧制计划</td>
+                                         <td>{{liData.roll_prg_no}}</td>
+                                         <td>出钢记号</td>
+                                         <td>{{liData.st_no}}</td>
+                                         </tr>
+                                         <tr>
+                                         <td>板坯状态</td>
+                                         <td>{{liData.slab_status}}</td>
+                                         <td>板坯属性</td>
+                                         <td>{{liData.slab_attribute}}</td>
+                                         </tr>
+                                         <tr>
+                                         <td>hcr标志</td>
+                                         <td>{{liData.hcr_flag}}</td>
+                                         <td>炉次号</td>
+                                         <td>{{liData.heat_no}}</td>
+                                         </tr>
+                                         <tr>
+                                         <td>余材坯</td>
+                                         <td>{{liData.yc_flag}}</td>
+                                         <td>生产订单号</td>
+                                         <td>{{liData.order_no}}</td>
+                                         </tr>
+                                         <tr>
+                                         <td>实际重量</td>
+                                         <td>{{liData.act_weight}}</td>
+                                         <td>合格标志</td>
+                                         <td>{{liData.yard_no}}</td>
+                                         </tr>
+                                         </tbody>
+                                         </table>
+                                         </div>"
+                           >
+                            {{liData.slab_no}}
+                        </button>
+                        <div class="pull-right tree-handle ng-scope angular-ui-tree-handle btn-lg" ui-tree-handle>
+                            <span class="glyphicon glyphicon-list"></span>
+                        </div>
+                        <span class="badge">{{storeData.length - $index}}</span>
+
+                    </li>
+                </ol>
             </div>
-            <span class="badge">{{storeData.length - $index}}</span>
+        </div>
+    </div>
 
-        </li>
-    </ol>
-</div>
-</div>
-</div>
-
-<div class="col-sm-6">
-    <h3>Full tree</h3>
-    <pre class="code">{{rowNum}},{{storeData.length}},{{ storeData | json }}</pre>
-</div>
+    <div class="col-sm-3">
+    <!--
+    <div class="col-sm-6">
+        <h3>Full tree</h3>
+        <pre class="code">{{rowNum}},{{storeData.length}},{{ storeData | json }}</pre>
+    </div>
+    -->
 </div>
 
 <!-- Modal -->

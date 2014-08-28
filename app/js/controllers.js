@@ -34,16 +34,16 @@ angular.module('myApp.controllers', []).directive('popover', function() {
 
                            var encrypted = encrypt.encrypt(data.password);
 
-                           $http.post('http://work/SycWeb/Login?userid=' + data.name,
+                           $http.post('http://win8dev/SycWeb/Login?userid=' + data.name,
                                                  JSON.stringify(encrypted),
                                                  {timeout: 1500}).
                            success(function(data) {
                              if(data.Status == false){
-                               $state.go("login");
+                               //$state.go("login");
                              }
                            }).
                            error(function(data,status){
-                             $state.go("login");
+                             //$state.go("login");
                            });
 
                          }])
@@ -60,7 +60,7 @@ angular.module('myApp.controllers', []).directive('popover', function() {
                                   }
 
                                   $scope.getStorageInfo = function(Hallno) {
-                                    $http.get('http://work/SycWeb/GetPilesByHallno/' + Hallno).success(function(data) {
+                                    $http.get('http://win8dev/SycWeb/GetPilesByHallno/' + Hallno).success(function(data) {
                                       var tabData= data.Data;
                                       tabData.sort(mySortRow);
 
@@ -155,7 +155,7 @@ angular.module('myApp.controllers', []).directive('popover', function() {
 
                                     if (dataToSend.length > 0){
                                       $scope.error = "";
-                                      $http.post('http://work/SycWeb/MoveSlab',
+                                      $http.post('http://win8dev/SycWeb/MoveSlab',
                                                  dataToSend,
                                                  {timeout: 1500}).
                                       success(function(data) {
@@ -187,7 +187,7 @@ angular.module('myApp.controllers', []).directive('popover', function() {
                                   },
                                 };
 
-                                $http.get('http://work/SycWeb/GetSlabByPileNo/' +
+                                $http.get('http://win8dev/SycWeb/GetSlabByPileNo/' +
                                           $scope.storeno).success(function(data) {
                                   data.Data.sort(mySortTIER_NO);
                                   $scope.storeData = data.Data;
@@ -227,7 +227,7 @@ angular.module('myApp.controllers', []).directive('popover', function() {
 
                                   var json = JSON.stringify(dataObj);
 
-                                  $http.post('http://work/SycWeb/RequestSlab',
+                                  $http.post('http://win8dev/SycWeb/RequestSlab',
                                              getDataToSent,
                                              {timeout: 1500}).
                                   success(function(data) {
@@ -257,7 +257,7 @@ angular.module('myApp.controllers', []).directive('popover', function() {
 
                                 $scope.myRemove = function(scope,index)
                                 {
-                                  $http.get("http://work/SycWeb/RemoveSlab?slabno=" +
+                                  $http.get("http://win8dev/SycWeb/RemoveSlab?slabno=" +
                                             $scope.storeData[index].slab_no + "&pileno=" +
                                             $scope.storeData[index].pile_no + "&tierno=" +
                                             $scope.storeData[index].tier_no,$scope.dataToInsert,{timeout: 1500}).
@@ -304,7 +304,7 @@ angular.module('myApp.controllers', []).directive('popover', function() {
                                     return
                                   }
 
-                                  $http.post('http://work/SycWeb/InsertSlab',$scope.dataToInsert,{timeout: 1500}).
+                                  $http.post('http://win8dev/SycWeb/InsertSlab',$scope.dataToInsert,{timeout: 1500}).
                                   success(function(data) {
                                     if(data.Status == true){
 
